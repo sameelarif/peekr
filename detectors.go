@@ -1,8 +1,11 @@
 package main
 
 import (
+	"compress/gzip"
+	"io"
 	"net/http"
 	"slices"
+	"strings"
 )
 
 // AKA_A2 - Akamai cache
@@ -46,10 +49,33 @@ func DetectRadware(resp *http.Response) bool {
 	return false
 }
 
+// datadome - DataDome cookie
 func DetectDataDome(resp *http.Response) bool {
+	cookies := resp.Cookies()
+	dataDomeCookies := []string{"datadome"}
+
+	for _, cookie := range cookies {
+		if slices.Contains(dataDomeCookies, cookie.Name) {
+			return true
+		}
+	}
+
 	return false
 }
 
 func DetectKasada(resp *http.Response) bool {
-	return false
+	reader, err := gzip.NewReader(resp.Body)
+	if err != nil {
+		return false
+	}
+	defer reader.Close()
+
+	bytes, err := io.ReadAll(reader)
+	if err != nil {
+		return false
+	}
+
+	html := string(bytes)
+
+	return strings.Contains(html, "KPSDK.configure")
 } 
