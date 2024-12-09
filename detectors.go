@@ -15,7 +15,7 @@ import (
 // _abck (deprecated) - Antibot
 func DetectAkamai(resp *http.Response) bool {
 	cookies := resp.Cookies()
-	akamaiCookies := []string{"_abck", "bm_sv", "ak_bmsc"}
+	akamaiCookies := []string{"_abck", "bm_sv", "ak_bmsc", "akavpau_p2", "bm_mi"}
 
 	for _, cookie := range cookies {
 		if slices.Contains(akamaiCookies, cookie.Name) {
@@ -38,8 +38,38 @@ func DetectImperva(resp *http.Response) bool {
 	return false
 }
 
+// _pxvid - Browser detection
+// _px* - Session
+// _pxff_* - Fingerprint
+// _pxhd - Server-side detection
+// _pxde - Data enrichment
+// window._pxAppId - Session
 func DetectPerimeterX(resp *http.Response) bool {
-	return false
+	cookies := resp.Cookies()
+	perimeterXCookies := []string{"_pxvid", "_px", "_pxff_", "_pxhd", "_pxde"}
+
+	for _, cookie := range cookies {
+		for _, pxCookie := range perimeterXCookies {
+			if strings.HasPrefix(cookie.Name, pxCookie) {
+				return true
+			}
+		}
+	}
+
+	reader, err := gzip.NewReader(resp.Body)
+	if err != nil {
+		return false
+	}
+	defer reader.Close()
+
+	bytes, err := io.ReadAll(reader)
+	if err != nil {
+		return false
+	}
+
+	html := string(bytes)
+
+	return strings.Contains(html, "_pxAppId")
 }
 
 func DetectReblaze(resp *http.Response) bool {
@@ -64,6 +94,8 @@ func DetectDataDome(resp *http.Response) bool {
 	return false
 }
 
+// KPSDK.configure 
+// <script src="{uuid}/{uuid}/p.js"></script>
 func DetectKasada(resp *http.Response) bool {
 	reader, err := gzip.NewReader(resp.Body)
 	if err != nil {
