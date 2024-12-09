@@ -5,7 +5,7 @@ import (
 )
 
 func main() {
-	url := "https://www.nike.com/"
+	url := "https://www.target.com/"
 
 	services, err := ParseWebsite(url) 
 	if err != nil {

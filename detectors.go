@@ -4,6 +4,7 @@ import (
 	"compress/gzip"
 	"io"
 	"net/http"
+	"regexp"
 	"slices"
 	"strings"
 )
@@ -77,5 +78,11 @@ func DetectKasada(resp *http.Response) bool {
 
 	html := string(bytes)
 
-	return strings.Contains(html, "KPSDK.configure")
-} 
+	if strings.Contains(html, "KPSDK.configure") {
+		return true
+	}
+
+	re := regexp.MustCompile(`<script src="/[0-9a-fA-F-]+/[0-9a-fA-F-]+/p.js"></script>`)
+	
+	return re.MatchString(html)
+}
