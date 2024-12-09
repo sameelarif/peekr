@@ -6,11 +6,11 @@ This is a small CLI tool to detect bot mitigation services used by any given web
 
 - [x] Akamai
 - [ ] Akamai Pixel
-- [] Cloudflare
-- [] Imperva
+- [ ] Cloudflare
+- [ ] Imperva
 - [x] PerimeterX
-- [] Reblaze
-- [] Radware
+- [ ] Reblaze
+- [ ] Radware
 - [x] DataDome
 - [x] Kasada
 
