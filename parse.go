@@ -14,7 +14,7 @@ func ParseWebsite(url string) ([]BotMitigationService, error) {
 
 
 	services := []BotMitigationService{}
-	
+
 	if DetectAkamai(resp) {
 		services = append(services, Akamai)
 	}
@@ -42,4 +42,6 @@ func ParseWebsite(url string) ([]BotMitigationService, error) {
 	if DetectKasada(resp) {
 		services = append(services, Kasada)
 	}
+
+	return services, nil
 }
