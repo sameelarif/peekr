@@ -5,7 +5,7 @@ This is a small CLI tool to detect bot mitigation services used by any given web
 ## Detectors
 
 - [x] Akamai
-- [] Akamai Pixel
+- [ ] Akamai Pixel
 - [] Cloudflare
 - [] Imperva
 - [x] PerimeterX
