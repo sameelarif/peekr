@@ -1,11 +1,12 @@
-package main
+package util
 
 import (
 	"fmt"
+	"main/models"
 	"net/http"
 )
 
-func ParseWebsite(url string) ([]BotMitigationService, error) {
+func ParseWebsite(url string) ([]string, error) {
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create request: %v", err)
@@ -36,35 +37,34 @@ func ParseWebsite(url string) ([]BotMitigationService, error) {
 	}
 	defer resp.Body.Close()
 
-
-	services := []BotMitigationService{}
+	services := []string{}
 
 	if DetectAkamai(resp) {
-		services = append(services, Akamai)
+		services = append(services, models.Akamai.String())
 	}
 	if DetectAkamaiPixel(resp) {
-		services = append(services, AkamaiPixel)
+		services = append(services, models.AkamaiPixel.String())
 	}
 	if DetectCloudflare(resp) {
-		services = append(services, Cloudflare)
+		services = append(services, models.Cloudflare.String())
 	}
 	if DetectImperva(resp) {
-		services = append(services, Imperva)
+		services = append(services, models.Imperva.String())
 	}
 	if DetectPerimeterX(resp) {
-		services = append(services, PerimeterX)
+		services = append(services, models.PerimeterX.String())
 	}
 	if DetectReblaze(resp) {
-		services = append(services, Reblaze)
+		services = append(services, models.Reblaze.String())
 	}
 	if DetectRadware(resp) {
-		services = append(services, Radware)
+		services = append(services, models.Radware.String())
 	}
 	if DetectDataDome(resp) {
-		services = append(services, DataDome)
+		services = append(services, models.DataDome.String())
 	}
 	if DetectKasada(resp) {
-		services = append(services, Kasada)
+		services = append(services, models.Kasada.String())
 	}
 
 	return services, nil

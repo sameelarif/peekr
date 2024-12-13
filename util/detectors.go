@@ -1,4 +1,4 @@
-package main
+package util
 
 import (
 	"compress/gzip"
@@ -10,12 +10,12 @@ import (
 )
 
 // AKA_A2 - Akamai cache
-// bm_sv - Antibot
+// bm_* - Antibot
 // ak_bmsc - Antibot
 // _abck (deprecated) - Antibot
 func DetectAkamai(resp *http.Response) bool {
 	cookies := resp.Cookies()
-	akamaiCookies := []string{"_abck", "bm_sv", "ak_bmsc", "akavpau_p2", "bm_mi"}
+	akamaiCookies := []string{"_abck", "bm_sv", "ak_bmsc", "akavpau_p2", "bm_"}
 
 	for _, cookie := range cookies {
 		if slices.Contains(akamaiCookies, cookie.Name) {
@@ -26,11 +26,20 @@ func DetectAkamai(resp *http.Response) bool {
 	return false
 }
 
+// <noscript>
+// <img src="https://www.vhnissanstevenspoint.com/akam/13/pixel_2d0a6cd4?a=dD1kMjQ2Y2IyNDg1MDc1NzVhNGRkNDNlNzg5NmNlZjQ1Mjk2ZjEyYjkxJmpzPW9mZg==" style="visibility: hidden; position: absolute; left: -999px; top: -999px;"/>
+// </noscript>
 func DetectAkamaiPixel(resp *http.Response) bool {
 	return false
 }
 
 func DetectCloudflare(resp *http.Response) bool {
+	cookies := resp.Cookies()
+	for _, cookie := range cookies {
+		if strings.HasPrefix(cookie.Name, "__cf_") {
+			return true
+		}
+	}
 	return false
 }
 
