@@ -3,10 +3,11 @@ package util
 import (
 	"compress/gzip"
 	"io"
-	"net/http"
 	"regexp"
 	"slices"
 	"strings"
+
+	http "github.com/useflyent/fhttp"
 )
 
 // AKA_A2 - Akamai cache

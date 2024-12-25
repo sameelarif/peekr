@@ -3,7 +3,8 @@ package util
 import (
 	"fmt"
 	"main/models"
-	"net/http"
+
+	http "github.com/useflyent/fhttp"
 )
 
 func ParseWebsite(url string) ([]string, error) {
@@ -12,23 +13,50 @@ func ParseWebsite(url string) ([]string, error) {
 		return nil, fmt.Errorf("failed to create request: %v", err)
 	}
 
-	req.Header.Set("accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7")
-	req.Header.Set("accept-encoding", "gzip, deflate, br, zstd")
-	req.Header.Set("accept-language", "en-US,en;q=0.9")
-	req.Header.Set("if-none-match", "\"s5tu3vn58o6bzh\"")
-	req.Header.Set("priority", "u=0, i")
-	req.Header.Set("sec-ch-ua", "\"Google Chrome\";v=\"131\", \"Chromium\";v=\"131\", \"Not_A Brand\";v=\"24\"")
-	req.Header.Set("sec-ch-ua-full-version-list", "\"Google Chrome\";v=\"131.0.6778.109\", \"Chromium\";v=\"131.0.6778.109\", \"Not_A Brand\";v=\"24.0.0.0\"")
-	req.Header.Set("sec-ch-ua-mobile", "?0")
-	req.Header.Set("sec-ch-ua-model", "\"\"")
-	req.Header.Set("sec-ch-ua-platform", "\"Windows\"")
-	req.Header.Set("sec-ch-ua-platform-version", "\"19.0.0\"")
-	req.Header.Set("sec-fetch-dest", "document")
-	req.Header.Set("sec-fetch-mode", "navigate")
-	req.Header.Set("sec-fetch-site", "none")
-	req.Header.Set("sec-fetch-user", "?1")
-	req.Header.Set("upgrade-insecure-requests", "1")
-	req.Header.Set("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36")
+	req.Header = http.Header{
+		"Accept":                      {"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7"},
+		"Accept-Encoding":             {"gzip, deflate, br, zstd"},
+		"Accept-Language":             {"en-US,en;q=0.9"},
+		"If-None-Match":               {"\"s5tu3vn58o6bzh\""},
+		"Priority":                    {"u=0, i"},
+		"Sec-CH-UA":                   {"\"Google Chrome\";v=\"131\", \"Chromium\";v=\"131\", \"Not_A Brand\";v=\"24\""},
+		"Sec-CH-UA-Full-Version-List": {"\"Google Chrome\";v=\"131.0.6778.109\", \"Chromium\";v=\"131.0.6778.109\", \"Not_A Brand\";v=\"24.0.0.0\""},
+		"Sec-CH-UA-Mobile":            {"?0"},
+		"Sec-CH-UA-Model":             {"\"\""},
+		"Sec-CH-UA-Platform":          {"\"Windows\""},
+		"Sec-CH-UA-Platform-Version":  {"\"19.0.0\""},
+		"Sec-Fetch-Dest":              {"document"},
+		"Sec-Fetch-Mode":              {"navigate"},
+		"Sec-Fetch-Site":              {"none"},
+		"Sec-Fetch-User":              {"?1"},
+		"Upgrade-Insecure-Requests":   {"1"},
+		"User-Agent":                  {"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"},
+		http.HeaderOrderKey: {
+			"accept",
+			"accept-encoding",
+			"accept-language",
+			"if-none-match",
+			"priority",
+			"sec-ch-ua",
+			"sec-ch-ua-full-version-list",
+			"sec-ch-ua-mobile",
+			"sec-ch-ua-model",
+			"sec-ch-ua-platform",
+			"sec-ch-ua-platform-version",
+			"sec-fetch-dest",
+			"sec-fetch-mode",
+			"sec-fetch-site",
+			"sec-fetch-user",
+			"upgrade-insecure-requests",
+			"user-agent",
+		},
+		http.PHeaderOrderKey: {
+			":method",
+			":path",
+			":authority",
+			":scheme",
+		},
+	}
 
 	client := &http.Client{}
 	resp, err := client.Do(req)

@@ -4,7 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"main/util"
-	"net/http"
+
+	http "github.com/useflyent/fhttp"
 )
 
 func main() {
@@ -46,4 +47,4 @@ func detectHandler(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(services)
-}
+} 
