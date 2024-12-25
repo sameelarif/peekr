@@ -94,6 +94,10 @@ func ParseWebsite(url string) ([]string, error) {
 	if DetectKasada(resp) {
 		services = append(services, models.Kasada.String())
 	}
+	if DetectRecaptcha(resp) {
+		services = append(services, models.Recaptcha.String())
+	}
+
 
 	return services, nil
 }

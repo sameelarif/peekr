@@ -128,3 +128,21 @@ func DetectKasada(resp *http.Response) bool {
 	
 	return re.MatchString(html)
 }
+
+// recaptcha/api.js
+func DetectRecaptcha(resp *http.Response) bool {
+	reader, err := gzip.NewReader(resp.Body)
+	if err != nil {
+		return false
+	}
+	defer reader.Close()
+
+	bytes, err := io.ReadAll(reader)
+	if err != nil {
+		return false
+	}
+
+	html := string(bytes)
+
+	return strings.Contains(html, `<script src="https://www.google.com/recaptcha/api.js`)
+}
