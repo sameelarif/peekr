@@ -28,10 +28,22 @@ func DetectAkamai(resp *http.Response) bool {
 }
 
 // <noscript>
-// <img src="https://www.vhnissanstevenspoint.com/akam/13/pixel_2d0a6cd4?a=dD1kMjQ2Y2IyNDg1MDc1NzVhNGRkNDNlNzg5NmNlZjQ1Mjk2ZjEyYjkxJmpzPW9mZg==" style="visibility: hidden; position: absolute; left: -999px; top: -999px;"/>
+// <img src="https://www.domain.com/akam/13/pixel_2d0a6cd4?a=dD1kMjQ2Y2IyNDg1MDc1NzVhNGRkNDNlNzg5NmNlZjQ1Mjk2ZjEyYjkxJmpzPW9mZg==" style="visibility: hidden; position: absolute; left: -999px; top: -999px;"/>
 // </noscript>
 func DetectAkamaiPixel(resp *http.Response) bool {
-	return false
+	reader, err := gzip.NewReader(resp.Body)
+	if err != nil {
+		return false
+	}
+	defer reader.Close()
+
+	bytes, err := io.ReadAll(reader)
+	if err != nil {
+		return false
+	}
+
+	html := string(bytes)
+	return strings.Contains(html, "akam/13/pixel")
 }
 
 func DetectCloudflare(resp *http.Response) bool {
