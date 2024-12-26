@@ -13,7 +13,9 @@ export async function POST(req: Request) {
     return NextResponse.json({ providers });
   } catch (error) {
     return NextResponse.json(
-      { error: "Failed to detect antibot providers" },
+      {
+        error: (error as Error).message || "Failed to detect antibot providers",
+      },
       { status: 500 }
     );
   }
